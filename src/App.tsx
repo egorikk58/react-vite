@@ -1,17 +1,16 @@
 import Auth from "@/page/auth.tsx";
 import {Routes, Route} from "react-router";
+import Login from "./components/auth/login";
 
 
-import "@/App.css";
 
 
 function App() {
     return (
         <div className={"w-full h-full bg-slate-50"}>
             <Routes>
-                <Route path="/auth/*" element={<Auth/>}/>
+              <Route path="/auth/login" element={<Login />} />
             </Routes>
-
         </div>
     )
 }

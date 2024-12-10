@@ -22,10 +22,11 @@ const Register = () => {
                     </div>
                 </div>
                 <div className={"w-full"}>
-                    <Button className={"w-full h-10"}>Создать аккаунт</Button>
+                    <Button className="w-full h-10 bg-[#0F172A] text-white">Создать аккаунт</Button>
                 </div>
                 <div>
-                    Уже есть аккаунт? Войти
+                    Уже есть аккаунт?Войти
+
                 </div>
             </div>
         </div>
