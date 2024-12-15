@@ -8,7 +8,7 @@ interface SidebarButtonProps {
     variation?: "default" | "active";
 }
 
-const SideButton: FC<SidebarButtonProps> = ({icon, title, variation}) => {
+const SidebarButton: FC<SidebarButtonProps> = ({icon, title, variation}) => {
     let btnStyle = "bg-transparent";
     let spanStyle = "text-slate-400";
 
@@ -27,4 +27,4 @@ const SideButton: FC<SidebarButtonProps> = ({icon, title, variation}) => {
     );
 };
 
-export default SideButton;
+export default SidebarButton;

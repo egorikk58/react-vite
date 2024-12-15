@@ -11,7 +11,7 @@ export default function App() {
             <Toolbar/>
             <Routes>
                 <Route path="/auth/*" element={<Auth/>}/>
-                <Route path="/lead/*" element={<Lead/>}/>
+                <Route path="/main/*" element={<Lead/>}/>
                 <Route path="/" element={<Login/>}/>
             </Routes>
 

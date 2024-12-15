@@ -7,8 +7,11 @@ export default function Toolbar (){
         <div className={"fixed bottom-0 right-0 bg-white p-2"}>
             <Label>тулбар</Label>
             <div className={"grid gap-2 grid-cols-1"}>
-                <NavLink to={"/lead/"}>
-                    <Button>Мейн страничка</Button>
+                <NavLink to={"/main/writer"}>
+                    <Button>Writer</Button>
+                </NavLink>
+                <NavLink to={"/main/reader"}>
+                    <Button>Reader</Button>
                 </NavLink>
                 <NavLink to={"/auth/login"}>
                     <Button>Login</Button>
