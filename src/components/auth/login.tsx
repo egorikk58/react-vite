@@ -3,7 +3,7 @@ import {Input} from "@/components/ui/input.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {NavLink} from "react-router";
 
-const Login = () => {
+export default function Login(){
     return (
         <div className={"bg-slate-50 w-screen h-screen flex items-center justify-center"}>
             <div className={"w-[416px] box-border p-4 bg-white rounded-2xl flex flex-col gap-4"}>
@@ -28,5 +28,3 @@ const Login = () => {
         </div>
     );
 };
-
-export default Login;

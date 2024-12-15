@@ -2,7 +2,7 @@ import Register from "@/components/auth/register.tsx";
 import Login from "@/components/auth/login.tsx";
 import { Routes, Route } from "react-router";
 
-const Auth = () => {
+export default function Auth() {
     return (
         <div className={"w-full h-full"}>
             <Routes>
@@ -12,5 +12,3 @@ const Auth = () => {
         </div>
     );
 };
-
-export default Auth;
