@@ -1,5 +1,5 @@
 import {Label} from "@/components/ui/label.tsx";
-import AuthInput from "@/components/auth/auth-input.tsx";
+import {Input} from "@/components/ui/input.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {NavLink} from "react-router";
 
@@ -10,10 +10,18 @@ const Register = () => {
                 <div>
                     <Label className={"text-xl font-semibold text-slate-900"}>Создать аккаунт</Label>
                 </div>
-                <AuthInput title={"Почта"} placeholder={"Введите почту"}/>
-                <AuthInput title={"Пароль"} placeholder={"Введите пароль"}/>
-                <AuthInput title={"Повторите пароль"} placeholder={"Повторите пароль"}/>
-
+                <div className="grid w-full max-w-sm items-center gap-1.5">
+                    <Label htmlFor="email">Почта</Label>
+                    <Input type="email" id="email" placeholder="Введите почту" />
+                </div>
+                <div className="grid w-full max-w-sm items-center gap-1.5">
+                    <Label htmlFor="email">Пароль</Label>
+                    <Input type="email" id="email" placeholder="Введите пароль" />
+                </div>
+                <div className="grid w-full max-w-sm items-center gap-1.5">
+                    <Label htmlFor="email">Повторите пароль</Label>
+                    <Input type="email" id="email" placeholder="Повторите пароль" />
+                </div>
                 <div>
                     Выберите роль
                     <div className={"p-[5px] bg-slate-100 rounded-md mt-1.5"}>
@@ -25,8 +33,7 @@ const Register = () => {
                     <Button className="w-full h-10 bg-[#0F172A] text-white">Создать аккаунт</Button>
                 </div>
                 <div>
-                    Уже есть аккаунт?Войти
-
+                    Уже есть аккаунт? <NavLink className={"text-indigo-500"} to={"/auth/login"}>Войти</NavLink>
                 </div>
             </div>
         </div>
