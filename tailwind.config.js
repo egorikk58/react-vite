@@ -1,4 +1,4 @@
-/** @type {import('tailwindcss').Config} */
+
 
 export default {
     content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx,html}"],
@@ -46,6 +46,6 @@ export default {
             },
         },
     },
-    plugins: [require("tailwindcss-animate")],
+
     darkMode: ["class"],
 }
