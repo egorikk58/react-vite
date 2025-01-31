@@ -1,7 +1,7 @@
-import {axiosInstance} from "@/api/instance.ts";
-import endpoints from "@/api/routes";
+import {axiosClient } from "@/api/axiosConfig";
+import apiRoutes from "@/api/routes";
 
 import {AxiosPromise} from "axios";
 
 export const getPosts = (): AxiosPromise =>
-    axiosInstance.get(endpoints.POST.GET_POSTS);
+    axiosClient .get(apiRoutes.POST.ALL);
