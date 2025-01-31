@@ -10,7 +10,7 @@ const Register = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [passwordVerify, setPasswordVerify] = useState("");
-    // const [role, setRole] = useState(0);
+    const [role, setRole] = useState(0);
     const [error, setError] = useState<any>(null);
     const navigate = useNavigate();
 
@@ -24,7 +24,7 @@ const Register = () => {
                 const data: IRegisterRequest = {
                     email,
                     password,
-                    // role: role ? "author" : "reader",
+                    role: role ? "author" : "reader",
                 }
 
                 const request = await api.auth.register(data);
@@ -62,9 +62,21 @@ const Register = () => {
                 </div>
                 <div>
                     Выберите роль
-                    <div className={"p-[5px] bg-slate-100 rounded-md mt-1.5"}>
-                        <Button variant={"ghost"} className={"bg-white border-transparent"}>Читатель</Button>
-                        <Button variant={"ghost"} className={"bg-transparent border-transparent"}>Автор</Button>
+                    <div className={"p-[5px] bg-slate-100 rounded-md mt-1.5" }>
+                    <Button 
+                           variant="ghost" 
+                           className={role === 0 ? "bg-white border-transparent" : "bg-transparent border-transparent"}
+                           onClick={() => setRole(0)}
+                         >
+                           Читатель
+                         </Button>
+                         <Button 
+                           variant="ghost" 
+                           className={role === 1 ? "bg-white border-transparent" : "bg-transparent border-transparent"}
+                           onClick={() => setRole(1)}
+                         >
+                           Автор
+                         </Button>
                     </div>
                 </div>
                 {error && <Label className={"text-md text-red-600"}>
