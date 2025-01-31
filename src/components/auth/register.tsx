@@ -10,7 +10,7 @@ const Register = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [passwordVerify, setPasswordVerify] = useState("");
-    const [role, setRole] = useState(0);
+    // const [role, setRole] = useState(0);
     const [error, setError] = useState<any>(null);
     const navigate = useNavigate();
 
@@ -24,7 +24,7 @@ const Register = () => {
                 const data: IRegisterRequest = {
                     email,
                     password,
-                    role: role ? "author" : "reader",
+                    // role: role ? "author" : "reader",
                 }
 
                 const request = await api.auth.register(data);
