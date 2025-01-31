@@ -1,10 +1,10 @@
 import {FC} from "react";
 import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle} from "@/components/ui/dialog.tsx";
+import {Trash2, Upload} from "lucide-react";
+import {Textarea} from "@/components/ui/textarea.tsx";
 import {Label} from "@/components/ui/label.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import {Button} from "@/components/ui/button.tsx";
-import {Trash2, Upload} from "lucide-react";
-import {Textarea} from "@/components/ui/textarea.tsx";
 
 interface PostDialogProps {
     open: boolean;

@@ -1,9 +1,9 @@
 import PostItem from "@/components/lead/posts/postItem.tsx";
-import {Route, Routes} from "react-router";
-import WriterNav from "@/components/lead/posts/writer-nav.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {useState} from "react";
-import PostDialog from "@/components/lead/posts/post-dialog.tsx";
+import PostDialog from "@/components/lead/posts/dialog.tsx";
+import {Route, Routes} from "react-router";
+import WriterNav from "@/components/lead/posts/writer-nav.tsx";
 
 
 const Posts = () => {

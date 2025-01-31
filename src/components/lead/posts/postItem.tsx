@@ -1,10 +1,10 @@
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar.tsx";
 import {Label} from "@/components/ui/label.tsx";
-import PostItemButton from "@/components/lead/posts/post-item-button.tsx";
+import PostItemButton from "@/components/lead/posts/post-button";
 import {NavLink} from "react-router";
 import {FC, useRef, useState} from "react";
 import {Button} from "@/components/ui/button.tsx";
-import PostDialog from "@/components/lead/posts/post-dialog.tsx";
+import PostDialog from "@/components/lead/posts/dialog";
 import {Heart, MessageCircle} from "lucide-react";
 
 interface postItemProps {
