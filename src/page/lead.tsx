@@ -4,7 +4,7 @@ import Posts from "@/components/lead/posts/posts.tsx";
 import Ad from "@/components/lead/ad.tsx";
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
-import { decodeAccessToken, IAccessTokenInfo, isTokenExpired } from "@/jwt-route";
+import { decodeAccessToken, isTokenExpired } from "@/jwt-route";
 import api from "@/api";
 
 const Main = () => {
