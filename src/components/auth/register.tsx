@@ -2,7 +2,7 @@ import {Label} from "@/components/ui/label.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {IRegisterRequest} from "@/api/auth/types.ts";
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import {NavLink,useNavigate} from "react-router";
 import api from "@/api";
 
@@ -41,6 +41,13 @@ const Register = () => {
             }
         }
     }
+    useEffect(() => {
+        const token = localStorage.getItem("accessToken");
+    
+        if (token) {
+            navigate("/main");
+        }
+    }, [navigate]);
 
     return (
         <div className={"bg-slate-50 w-screen h-screen flex items-center justify-center"}>

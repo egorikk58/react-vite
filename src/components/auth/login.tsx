@@ -12,7 +12,14 @@ export default function Login(){
     const [error, setError] = useState<any>(null);
 
     const navigate = useNavigate();
-
+    useEffect(() => {
+        const token = localStorage.getItem("accessToken");
+    
+        if (token) {
+            navigate("/main");
+        }
+    }, [navigate]);
+    
     const handleSignIn = async () => {
             try {
                 const data: ILoginRequest  = {
