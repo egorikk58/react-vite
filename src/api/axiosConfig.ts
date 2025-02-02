@@ -14,14 +14,16 @@ axiosClient.interceptors.request.use((config) => {
     if (config.url && publicEndpoints.includes(config.url)) {
       return config;
     }
-
-    config.headers.contentType = "application/json";
-
+  
+    // Не устанавливаем Content-Type для FormData
+    if (!(config.data instanceof FormData)) {
+      config.headers["Content-Type"] = "application/json";
+    }
+  
     const authToken = localStorage.getItem("accessToken");
-
     if (authToken) {
-        config.headers.Authorization = `Bearer ${authToken}`;
-      }
-
+      config.headers.Authorization = `Bearer ${authToken}`;
+    }
+  
     return config;
-})
+});
