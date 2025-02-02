@@ -40,7 +40,7 @@ const PostItemContent: FC<PostItemProps> = ({ type, post, onUpdate }) => {
           </Avatar>
           <div className={"flex flex-col ml-2"}>
             <Label className={"font-normal text-sm text-slate-900 h-6 flex items-center"}>
-              {localStorage.getItem("email") || "pochta@gmail.com"}
+              {"user " + post?.id|| "pochta@gmail.com"}
             </Label>
             <Label className={"font-medium text-xs text-slate-400 h-5 flex items-center"}>
               {post?.createdAt || "31 октября"}
