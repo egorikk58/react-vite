@@ -12,14 +12,6 @@ export default function Login(){
     const [error, setError] = useState<any>(null);
 
     const navigate = useNavigate();
-    useEffect(() => {
-        const token = localStorage.getItem("accessToken");
-    
-        if (token) {
-            navigate("/main");
-        }
-    }, [navigate]);
-    
     const handleSignIn = async () => {
             try {
                 const data: ILoginRequest  = {
@@ -32,6 +24,7 @@ export default function Login(){
                 if (response.status === 200) {
                   localStorage.setItem("accessToken", response.data.accessToken);
                   localStorage.setItem("refreshToken", response.data.refreshToken);
+                  localStorage.setItem("email",email);
                   navigate("/main");
                 }
             } catch (error) {
