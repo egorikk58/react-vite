@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import api from "@/api";
-import { ICreatePostRequest, IUpdatePostRequest } from "@/api/post/types";
+// import { ICreatePostRequest, IUpdatePostRequest } from "@/api/post/types";
 
 interface PostDialogProps {
   open: boolean;
@@ -22,7 +22,7 @@ interface PostDialogProps {
 const PostDialog: FC<PostDialogProps> = ({
   open,
   onOpenChange,
-  picState,
+  // picState,
   setPicState,
   variation = "add",
   postId,
@@ -73,19 +73,19 @@ const PostDialog: FC<PostDialogProps> = ({
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const uploadImage = async (postId: number) => {
-    if (!selectedFile) return;
+  // const uploadImage = async (postId: number) => {
+  //   if (!selectedFile) return;
 
-    const formData = new FormData();
-    formData.append("image", selectedFile);
+  //   const formData = new FormData();
+  //   formData.append("image", selectedFile);
 
-    try {
-      await api.post.uploadPostImage(postId, formData);
-    } catch (error) {
-      console.error("Ошибка загрузки изображения:", error);
-      throw error;
-    }
-  };
+  //   try {
+  //     // await api.post.uploadPostImage(postId, formData);
+  //   } catch (error) {
+  //     console.error("Ошибка загрузки изображения:", error);
+  //     throw error;
+  //   }
+  // };
 
   const handleSubmit = async () => {
     try {
@@ -117,7 +117,7 @@ const PostDialog: FC<PostDialogProps> = ({
       if (createdPostId && selectedFile) {
         const formData = new FormData();
         formData.append('image', selectedFile);
-        await api.post.uploadPostImage(createdPostId, formData);
+        // await api.post.uploadPostImage(createdPostId, formData);
       }
 
       onSuccess?.();
