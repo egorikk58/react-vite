@@ -7,7 +7,9 @@ import {
   ICreatePostRequest,
   IUpdatePostRequest,
   IUpdatePostStatusRequest,
+  IImageResponse
 } from "./types";
+
 
 export const getPosts = (): AxiosPromise<IPost[]> =>
   axiosClient.get(apiRoutes.POST.ALL);
@@ -33,7 +35,7 @@ export const deletePost = (postId: number): AxiosPromise<void> =>
 export const uploadPostImage = (
   postId: number,
   image: File
-): AxiosPromise<void> => {
+): AxiosPromise<IImageResponse> => {
   const formData = new FormData();
   formData.append("image", image);
   return axiosClient.post(apiRoutes.POST.IMAGES(postId), formData, {

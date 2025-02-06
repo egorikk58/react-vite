@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState, useRef, useEffect } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog.tsx";
 import { Trash2, Upload } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea.tsx";
@@ -14,9 +14,9 @@ interface PostDialogProps {
   picState: boolean;
   setPicState: (state: boolean) => void;
   variation?: "add" | "edit";
-  postId?: number; // Для редактирования поста
-  initialData?: { title: string; content: string }; // Начальные данные для редактирования
-  onSuccess?: () => void; // Колбэк после успешного создания/редактирования
+  postId?: number;
+  initialData?: { title: string; content: string };
+  onSuccess?: () => void;
 }
 
 const PostDialog: FC<PostDialogProps> = ({
@@ -31,28 +31,100 @@ const PostDialog: FC<PostDialogProps> = ({
 }) => {
   const [title, setTitle] = useState(initialData.title);
   const [content, setContent] = useState(initialData.content);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Сброс состояний при закрытии диалога
+  useEffect(() => {
+    if (!open) {
+      setSelectedFile(null);
+      setPreview(null);
+      setPicState(false);
+    }
+  }, [open]);
+
+  // Генерация превью изображения
+  useEffect(() => {
+    if (!selectedFile) {
+      setPreview(null);
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(selectedFile);
+    setPreview(objectUrl);
+    setPicState(true);
+
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [selectedFile]);
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setSelectedFile(null);
+    setPreview(null);
+    setPicState(false);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const uploadImage = async (postId: number) => {
+    if (!selectedFile) return;
+
+    const formData = new FormData();
+    formData.append("image", selectedFile);
+
+    try {
+      await api.post.uploadPostImage(postId, formData);
+    } catch (error) {
+      console.error("Ошибка загрузки изображения:", error);
+      throw error;
+    }
+  };
 
   const handleSubmit = async () => {
     try {
       setLoading(true);
 
+      if (!title || !content) {
+        alert('Заполните обязательные поля');
+        return;
+      }
+
+      let createdPostId: number | undefined;
+
+      // Создание нового поста
       if (variation === "add") {
-        const data: ICreatePostRequest = {
+        const { data: newPost } = await api.post.createPost({
           title,
           content,
           idempotencyKey: Date.now().toString(),
-        };
-        await api.post.createPost(data);
-      } else if (variation === "edit" && postId) {
-        const data: IUpdatePostRequest = { title, content };
-        await api.post.updatePost(postId, data);
+        });
+        createdPostId = newPost.id;
+      } 
+      // Редактирование существующего
+      else if (variation === "edit" && postId) {
+        await api.post.updatePost(postId, { title, content });
+        createdPostId = postId;
+      }
+
+      // Загрузка изображения если есть
+      if (createdPostId && selectedFile) {
+        const formData = new FormData();
+        formData.append('image', selectedFile);
+        await api.post.uploadPostImage(createdPostId, formData);
       }
 
       onSuccess?.();
       onOpenChange(false);
     } catch (error) {
-      console.error("Ошибка при сохранении поста:", error);
+      console.error('Ошибка создания поста:', error);
+      alert('Ошибка при создании поста');
     } finally {
       setLoading(false);
     }
@@ -60,61 +132,90 @@ const PostDialog: FC<PostDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={"w-[512px] box-content"}>
+      <DialogContent className="w-[512px] box-content">
         <DialogHeader>
-          <DialogTitle className={"mb-4 font-semibold text-xl text-slate-900"}>
+          <DialogTitle className="mb-4 font-semibold text-xl text-slate-900">
             {variation === "add" ? "Создать пост" : "Редактировать пост"}
           </DialogTitle>
-          <DialogDescription className={"flex flex-col gap-4 items-start"}>
+          
+          <DialogDescription className="flex flex-col gap-4 items-start">
+            {/* Заголовок */}
             <div className="grid w-full items-center gap-1.5">
-              <Label className={"text-slate-900 font-semibold text-sm"}>Заголовок</Label>
+              <Label className="text-slate-900 font-semibold text-sm">Заголовок</Label>
               <Input
-                className={"w-full"}
-                placeholder="Введите заголовок"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                placeholder="Введите заголовок"
               />
             </div>
-            {picState ? (
-              <div className={"w-[512px] h-[288px] relative"}>
-                <div className={"bg-slate-300 w-full h-full rounded-md absolute"}></div>
-                <div
-                  className={
-                    "bg-[#00000052] hover:opacity-100 opacity-0 transition-all duration-200 w-full h-full rounded-md absolute"
-                  }
-                >
-                  <Button
-                    onClick={() => setPicState(false)}
-                    variant={"ghost"}
-                    className={"absolute hover:bg-transparent p-0 m-0 w-[12px] h-[12px] top-4 right-4"}
-                  >
-                    <Trash2 className={""} color={"white"} size={48} />
-                  </Button>
+
+            {/* Блок с изображением */}
+            <div className="w-full">
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileSelect}
+                accept="image/*"
+                hidden
+              />
+
+              {preview ? (
+                <div className="relative group w-[512px] h-[288px]">
+                  <img
+                    src={preview}
+                    alt="Превью"
+                    className="w-full h-full object-cover rounded-md"
+                  />
+                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <Button
+                      variant="ghost"
+                      onClick={handleRemoveImage}
+                      className="text-white hover:bg-white/10"
+                    >
+                      <Trash2 className="mr-2" />
+                      Удалить изображение
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <div>
-                <Button onClick={() => setPicState(true)}>
-                  <Upload color={"white"} />
-                  <Label className={"text-white"}>Добавить картинку</Label>
+              ) : (
+                <Button
+                  variant="outline"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full h-32 flex flex-col gap-2"
+                >
+                  <Upload className="text-slate-400" />
+                  <span className="text-slate-500 text-sm">Нажмите для загрузки изображения</span>
+                  <span className="text-slate-400 text-xs">Поддерживаемые форматы: JPEG, PNG</span>
                 </Button>
-              </div>
-            )}
+              )}
+            </div>
+
+            {/* Контент */}
             <div className="grid w-full items-center gap-1.5">
-              <Label className={"text-slate-900 font-semibold text-sm"}>Контент</Label>
+              <Label className="text-slate-900 font-semibold text-sm">Контент</Label>
               <Textarea
-                className={"w-full"}
-                placeholder={"Введите контент"}
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
+                placeholder="Введите содержимое поста"
+                rows={5}
               />
             </div>
-            <div className={"flex gap-2"}>
-              <Button onClick={handleSubmit} disabled={loading}>
-                {loading ? "Сохранение..." : "Опубликовать пост"}
+
+            {/* Кнопки действий */}
+            <div className="flex gap-2 w-full">
+              <Button 
+                onClick={handleSubmit}
+                disabled={loading}
+                className="flex-1"
+              >
+                {loading ? "Сохранение..." : "Опубликовать"}
               </Button>
-              <Button className={"bg-slate-200"} variant={"secondary"}>
-                Отправить в черновики
+              <Button
+                variant="secondary"
+                className="flex-1"
+                onClick={() => onOpenChange(false)}
+              >
+                Отмена
               </Button>
             </div>
           </DialogDescription>

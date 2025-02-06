@@ -6,12 +6,14 @@ export interface IPost {
     createdAt: string;
     updatedAt: string;
     images: IImage[];
+    authorId: number;
   }
   
-  export interface IImage {
-    id: number;
-    url: string;
-  }
+// Измените интерфейс IImage
+export interface IImage {
+  id: number;
+  imageUrl: string;  // Было "url", должно быть "imageUrl"
+}
   
   export interface ICreatePostRequest {
     title: string;
@@ -27,3 +29,6 @@ export interface IPost {
   export interface IUpdatePostStatusRequest {
     status: string;
   }
+export interface IImageResponse {
+    id: number;
+    url: string;}

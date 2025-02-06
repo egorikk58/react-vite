@@ -15,6 +15,7 @@ const apiRoutes = {
     IMAGES: (postId: number) => `${API_BASE_URL}posts/${postId}/images`,
     IMAGE: (postId: number, imageId: number) => 
       `${API_BASE_URL}posts/${postId}/images/${imageId}`,
+    DELETE: (postId: number) => `${API_BASE_URL}posts/${postId}`,
   }
 };
 

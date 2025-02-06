@@ -6,7 +6,7 @@ import { FC, useRef, useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import PostDialog from "@/components/lead/posts/dialog";
 import { Heart, MessageCircle } from "lucide-react";
-import { IPost } from "@/api/post/types";
+import { IPost, IImage } from "@/api/post/types";
 import api from "@/api";
 
 interface PostItemProps {
@@ -40,21 +40,38 @@ const PostItemContent: FC<PostItemProps> = ({ type, post, onUpdate }) => {
           </Avatar>
           <div className={"flex flex-col ml-2"}>
             <Label className={"font-normal text-sm text-slate-900 h-6 flex items-center"}>
-              {"user#" + post?.id|| "pochta@gmail.com"}
+              {"user#" + post?.authorId|| "pochta@gmail.com"}
             </Label>
             <Label className={"font-medium text-xs text-slate-400 h-5 flex items-center"}>
-              {post?.createdAt || "31 октября"}
-            </Label>
+              {post?.createdAt 
+                ? new Date(post.createdAt).toLocaleDateString('ru-RU', {
+                   day: 'numeric',
+                   month: 'long',
+                   year: 'numeric'
+                })
+              : "Дата не указана"}
+          </Label>
           </div>
         </div>
         <div>
           <Label className={"font-semibold text-xl text-slate-900"}>{post?.title || "Заголовок"}</Label>
         </div>
-        <div className={"w-full h-[432px] bg-slate-300 rounded-md"}>
-          {post?.images?.map((image) => (
-            <img key={image.id} src={image.url} alt="Изображение поста" className="w-full h-full object-cover" />
-          ))}
-        </div>
+        {post?.images && post.images.length > 0 ? (
+          <div className="w-full h-[432px] bg-slate-300 rounded-md overflow-hidden">
+            {post.images.map((image: IImage) => (
+              <img
+                key={image.id}
+                src={image.imageUrl}  // Исправлено с url на imageUrl
+                alt="Изображение поста"
+                className="w-full h-full object-cover"
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="w-full h-[432px] bg-slate-300 rounded-md flex items-center justify-center">
+            <span className="text-slate-500">Нет изображений</span>
+          </div>
+        )}
         <Label className={"w-full font-normal text-sm text-slate-900 leading-6"}>
           {post?.content ||
             "Повседневная практика показывает, что социально-экономическое развитие способствует подготовке и реализации распределения внутренних резервов и ресурсов."}
