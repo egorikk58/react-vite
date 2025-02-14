@@ -12,7 +12,6 @@ export default function usePosts() {
         try {
             setLoading(true);
             setError(null);
-
             const response = await api.post.getPosts();
 
             if (response.data && Array.isArray(response.data)) {
