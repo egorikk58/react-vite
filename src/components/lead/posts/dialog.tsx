@@ -22,7 +22,6 @@ interface PostDialogProps {
 const PostDialog: FC<PostDialogProps> = ({
   open,
   onOpenChange,
-  // picState,
   setPicState,
   variation = "add",
   postId,
@@ -73,31 +72,60 @@ const PostDialog: FC<PostDialogProps> = ({
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  // const uploadImage = async (postId: number) => {
-  //   if (!selectedFile) return;
 
-  //   const formData = new FormData();
-  //   formData.append("image", selectedFile);
-
+  // const handleSubmit = async () => {
   //   try {
-  //     // await api.post.uploadPostImage(postId, formData);
+  //     setLoading(true);
+
+  //     if (!title || !content) {
+  //       alert('Заполните обязательные поля');
+  //       return;
+  //     }
+
+  //     let createdPostId: number | undefined;
+
+  //     // Создание нового поста
+  //     if (variation === "add") {
+  //       const { data: newPost } = await api.post.createPost({
+  //         title,
+  //         content,
+  //         idempotencyKey: Date.now().toString(),
+  //       });
+  //       createdPostId = newPost.id;
+  //     } 
+  //     // Редактирование существующего
+  //     else if (variation === "edit" && postId) {
+  //       await api.post.updatePost(postId, { title, content });
+  //       createdPostId = postId;
+  //     }
+
+  //     // Загрузка изображения если есть
+  //     if (createdPostId && selectedFile) {
+  //       const formData = new FormData();
+  //       formData.append('image', selectedFile);
+  //       // await api.post.uploadPostImage(createdPostId, formData);
+  //     }
+
+  //     onSuccess?.();
+  //     onOpenChange(false);
   //   } catch (error) {
-  //     console.error("Ошибка загрузки изображения:", error);
-  //     throw error;
+  //     console.error('Ошибка создания поста:', error);
+  //     alert('Ошибка при создании поста');
+  //   } finally {
+  //     setLoading(false);
   //   }
   // };
-
   const handleSubmit = async () => {
     try {
       setLoading(true);
-
+  
       if (!title || !content) {
         alert('Заполните обязательные поля');
         return;
       }
-
+  
       let createdPostId: number | undefined;
-
+  
       // Создание нового поста
       if (variation === "add") {
         const { data: newPost } = await api.post.createPost({
@@ -112,14 +140,12 @@ const PostDialog: FC<PostDialogProps> = ({
         await api.post.updatePost(postId, { title, content });
         createdPostId = postId;
       }
-
+  
       // Загрузка изображения если есть
       if (createdPostId && selectedFile) {
-        const formData = new FormData();
-        formData.append('image', selectedFile);
-        // await api.post.uploadPostImage(createdPostId, formData);
+        await api.post.uploadPostImage(createdPostId, selectedFile);
       }
-
+  
       onSuccess?.();
       onOpenChange(false);
     } catch (error) {
