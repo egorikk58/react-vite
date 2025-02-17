@@ -25,7 +25,8 @@ const PostItem: FC<PostItemProps> = ({ type, post, onUpdate }) => {
       try {
         await api.post.updatePostStatus(post.id, { status: "published" });
         onUpdate?.();
-        alert("Пост успешно опубликован")
+        post?.status === 'published'?alert("Пост успешно обновлен"):alert("Пост успешно опубликован");
+        window.location.reload(); // Добавьте эту строку
       } catch (error) {
         console.error("Ошибка при публикации поста:", error);
       }
@@ -81,7 +82,7 @@ const PostItem: FC<PostItemProps> = ({ type, post, onUpdate }) => {
         {(type === "writer-clickable" || type === "writer-default") && (
           <div className={"flex gap-3 w-[167px] h-10"}>
             <Button className={"w-[167px] h-10 z-10"} onClick={handlePublishPost}>
-              Опубликовать пост
+              {post?.status === 'published' ? "Обновить пост" : "Опубликовать пост"}
             </Button>
             <Button
               className={"w-[138px] h-10 z-10"}
