@@ -11,6 +11,7 @@ const Posts = () => {
     const [createPostDialog, setCreatePostDialog] = useState(false);
     const [createPostPic, setCreatePostPic] = useState(false);
     const { posts, loading, error } = usePosts();
+    
 
     if (loading) return <div>Загрузка...</div>;
     if (error) return <div>Ошибка: {error.message}</div>;

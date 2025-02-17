@@ -1,67 +1,33 @@
 // hooks/usePosts.ts
-import { useState, useEffect, useCallback } from "react";
+import { useEffect, useState } from "react";
 import api from "@/api";
-import { IPost, ICreatePostRequest, IUpdatePostRequest } from "@/api/post/types";
+import { IPost } from "@/api/post/types";
 
-export default function usePosts() {
+const usePosts = (params?: { status?: "draft" | "published", authorId?: number }) => {
     const [posts, setPosts] = useState<IPost[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
 
-    const fetchPosts = useCallback(async () => {
+    const fetchPosts = async () => {
         try {
-            setLoading(true);
-            setError(null);
-            const response = await api.post.getPosts();
-
-            if (response.data && Array.isArray(response.data)) {
-                setPosts(response.data);
-            } else {
-                throw new Error("Некорректный формат данных постов");
-            }
+            const response = await api.post.getPosts({ status: params?.status });
+            // Фильтрация по автору на клиенте, если не поддерживается бэкендом
+            const filtered = params?.authorId 
+                ? response.data.filter(post => post.authorId === params.authorId)
+                : response.data;
+            setPosts(filtered);
         } catch (err) {
-            console.error("Error fetching posts:", err);
-            setError(err instanceof Error ? err : new Error("Ошибка загрузки"));
+            setError(err as Error);
         } finally {
             setLoading(false);
         }
-    }, []);
-
-    const createPost = useCallback(async (data: ICreatePostRequest) => {
-        try {
-            const response = await api.post.createPost(data);
-            setPosts((prev) => [response.data, ...prev]);
-        } catch (err) {
-            console.error("Error creating post:", err);
-            throw err;
-        }
-    }, []);
-
-    const updatePost = useCallback(async (postId: number, data: IUpdatePostRequest) => {
-        try {
-            const response = await api.post.updatePost(postId, data);
-            setPosts((prev) =>
-                prev.map((post) => (post.id === postId ? response.data : post))
-            );
-        } catch (err) {
-            console.error("Error updating post:", err);
-            throw err;
-        }
-    }, []);
-
-    const deletePost = useCallback(async (postId: number) => {
-        try {
-            await api.post.deletePost(postId);
-            setPosts((prev) => prev.filter((post) => post.id !== postId));
-        } catch (err) {
-            console.error("Error deleting post:", err);
-            throw err;
-        }
-    }, []);
+    };
 
     useEffect(() => {
         fetchPosts();
-    }, [fetchPosts]);
+    }, [params?.status, params?.authorId]);
 
-    return { posts, loading, error, fetchPosts, createPost, updatePost, deletePost };
-}
+    return { posts, loading, error, refetch: fetchPosts };
+};
+
+export default usePosts;

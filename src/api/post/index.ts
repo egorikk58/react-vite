@@ -1,4 +1,3 @@
-// api/post/index.ts
 import { axiosClient } from "@/api/axiosConfig";
 import apiRoutes from "@/api/routes";
 import { AxiosPromise } from "axios";
@@ -10,28 +9,29 @@ import {
   IImageResponse
 } from "./types";
 
+// Получение всех постов (с фильтрацией по статусу)
+export const getPosts = (params?: { status?: string }): AxiosPromise<IPost[]> =>
+  axiosClient.get(apiRoutes.POST.ALL, { params });
 
-export const getPosts = (): AxiosPromise<IPost[]> =>
-  axiosClient.get(apiRoutes.POST.ALL);
-
+// Создание поста (по умолчанию статус draft)
 export const createPost = (data: ICreatePostRequest): AxiosPromise<IPost> =>
-  axiosClient.post(apiRoutes.POST.CREATE, data);
+  axiosClient.post(apiRoutes.POST.CREATE,{ data,status: "draft"});
 
+// Обновление поста (заголовок и контент)
 export const updatePost = (
   postId: number,
   data: IUpdatePostRequest
 ): AxiosPromise<IPost> =>
   axiosClient.put(apiRoutes.POST.UPDATE(postId), data);
 
+// Обновление статуса поста
 export const updatePostStatus = (
   postId: number,
   data: IUpdatePostStatusRequest
 ): AxiosPromise<IPost> =>
   axiosClient.patch(apiRoutes.POST.STATUS(postId), data);
 
-export const deletePost = (postId: number): AxiosPromise<void> =>
-  axiosClient.delete(apiRoutes.POST.UPDATE(postId));
-
+// Загрузка изображения для поста
 export const uploadPostImage = (
   postId: number,
   image: File
@@ -43,6 +43,7 @@ export const uploadPostImage = (
   });
 };
 
+// Удаление изображения
 export const deletePostImage = (
   postId: number,
   imageId: number

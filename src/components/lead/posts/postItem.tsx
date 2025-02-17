@@ -19,13 +19,14 @@ const PostItemContent: FC<PostItemProps> = ({ type, post, onUpdate }) => {
   const [editPostDialog, setEditPostDialog] = useState(false);
   const [editPostPic, setEditPostPic] = useState(false);
 
-  const handleDeletePost = async () => {
+  const handlePublishPost = async () => {
     if (post?.id) {
       try {
-        await api.post.deletePost(post.id);
+        await api.post.updatePostStatus(post.id, { status: "published" });
         onUpdate?.();
+        alert("Пост успешно опубликован")
       } catch (error) {
-        console.error("Ошибка при удалении поста:", error);
+        console.error("Ошибка при публикации поста:", error);
       }
     }
   };
@@ -78,7 +79,7 @@ const PostItemContent: FC<PostItemProps> = ({ type, post, onUpdate }) => {
         </Label>
         {(type === "writer-clickable" || type === "writer-default") && (
           <div className={"flex gap-3 w-[167px] h-10"}>
-            <Button className={"w-[167px] h-10 z-10"}>Опубликовать пост</Button>
+            <Button className={"w-[167px] h-10 z-10"} onClick={handlePublishPost}>Опубликовать пост</Button>
             <Button
               className={"w-[138px] h-10 z-10"}
               variant={"secondary"}
@@ -86,7 +87,7 @@ const PostItemContent: FC<PostItemProps> = ({ type, post, onUpdate }) => {
             >
               Редактировать
             </Button>
-            <Button variant="destructive" onClick={handleDeletePost}>
+            <Button variant="destructive">
               Удалить
             </Button>
           </div>

@@ -1,12 +1,30 @@
-import WriterNavItem from "@/components/lead/posts/writer-nav-item.tsx";
+// components/WriterNav.tsx
+import { NavLink } from "react-router-dom";
 
 const WriterNav = () => {
     return (
-        <div className={" h-10 border rounded-md flex items-center justify-center text-sm font-medium p-1"}>
-            <WriterNavItem text={"Все посты"} to={"/main/writer/m"}/>
-            <WriterNavItem text={"Мои посты"} to={"/main/writer/my"}/>
-            <WriterNavItem text={"Черновики"} to={"/main/writer/сh"}/>
-        </div>
+        <nav className="flex gap-4 p-2 border rounded-md mb-6">
+            <NavLink 
+                to="/main/writer/my"
+                className={({ isActive }) => 
+                    `px-4 py-2 rounded-md ${
+                        isActive ? 'bg-blue-100 text-blue-600' : 'hover:bg-gray-100'
+                    }`
+                }
+            >
+                Мои посты
+            </NavLink>
+            <NavLink 
+                to="/main/writer/ch"
+                className={({ isActive }) => 
+                    `px-4 py-2 rounded-md ${
+                        isActive ? 'bg-blue-100 text-blue-600' : 'hover:bg-gray-100'
+                    }`
+                }
+            >
+                Черновики
+            </NavLink>
+        </nav>
     );
 };
 
