@@ -15,7 +15,7 @@ export const getPosts = (params?: { status?: string }): AxiosPromise<IPost[]> =>
 
 // Создание поста (по умолчанию статус draft)
 export const createPost = (data: ICreatePostRequest): AxiosPromise<IPost> =>
-  axiosClient.post(apiRoutes.POST.CREATE,{ data,status: "draft"});
+  axiosClient.post(apiRoutes.POST.CREATE, data);
 
 // Обновление поста (заголовок и контент)
 export const updatePost = (
