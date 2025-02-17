@@ -1,7 +1,8 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import PostItemButton from "@/components/lead/posts/post-button";
-import { FC, useState } from "react";
+import { NavLink } from "react-router";
+import { FC, useRef, useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import PostDialog from "@/components/lead/posts/dialog";
 import { Heart, MessageCircle } from "lucide-react";
@@ -14,19 +15,17 @@ interface PostItemProps {
   onUpdate?: () => void; // Колбэк для обновления списка постов
 }
 
-const PostItem: FC<PostItemProps> = ({ type, post, onUpdate }) => {
+const PostItemContent: FC<PostItemProps> = ({ type, post, onUpdate }) => {
   const [editPostDialog, setEditPostDialog] = useState(false);
   const [editPostPic, setEditPostPic] = useState(false);
-
-
-
   const handlePublishPost = async () => {
     if (post?.id) {
       try {
         await api.post.updatePostStatus(post.id, { status: "published" });
         onUpdate?.();
-        post?.status === 'published'?alert("Пост успешно обновлен"):alert("Пост успешно опубликован");
+        post?.status === 'published' ? alert("Пост обновлен") : alert("Пост опубликован");
         window.location.reload(); // Добавьте эту строку
+        
       } catch (error) {
         console.error("Ошибка при публикации поста:", error);
       }
@@ -43,17 +42,17 @@ const PostItem: FC<PostItemProps> = ({ type, post, onUpdate }) => {
           </Avatar>
           <div className={"flex flex-col ml-2"}>
             <Label className={"font-normal text-sm text-slate-900 h-6 flex items-center"}>
-              {"user#" + post?.authorId || "pochta@gmail.com"}
+              {"user#" + post?.authorId|| "pochta@gmail.com"}
             </Label>
             <Label className={"font-medium text-xs text-slate-400 h-5 flex items-center"}>
-              {post?.createdAt
+              {post?.createdAt 
                 ? new Date(post.createdAt).toLocaleDateString('ru-RU', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric'
-                  })
-                : "Дата не указана"}
-            </Label>
+                   day: 'numeric',
+                   month: 'long',
+                   year: 'numeric'
+                })
+              : "Дата не указана"}
+          </Label>
           </div>
         </div>
         <div>
@@ -64,7 +63,7 @@ const PostItem: FC<PostItemProps> = ({ type, post, onUpdate }) => {
             {post.images.map((image: IImage) => (
               <img
                 key={image.id}
-                src={image.imageUrl}
+                src={image.imageUrl}  // Исправлено с url на imageUrl
                 alt="Изображение поста"
                 className="w-full h-full object-cover"
               />
@@ -114,6 +113,41 @@ const PostItem: FC<PostItemProps> = ({ type, post, onUpdate }) => {
       </div>
     </div>
   );
+};
+
+const PostItem: FC<PostItemProps> = ({ type, post, onUpdate }) => {
+  const ref = useRef<HTMLDivElement>(null);
+
+  const handleHoverEnter = () => {
+    ref.current && (ref.current.style.backgroundColor = "#E2E8F0");
+  };
+  const handleHoverLeave = () => {
+    ref.current && (ref.current.style.backgroundColor = "white");
+  };
+
+  if (type === "clickable" || type === "writer-clickable") {
+    return (
+      <div ref={ref} className={"w-full rounded-xl bg-white transition-all"}>
+        <div className={"relative"}>
+          <div onMouseEnter={handleHoverEnter} onMouseLeave={handleHoverLeave}>
+            <PostItemContent type={type} post={post} onUpdate={onUpdate} />
+          </div>
+          <div onMouseEnter={handleHoverEnter} onMouseLeave={handleHoverLeave}>
+            <NavLink
+              to={type === "clickable" ? `/main/reader/post/${post?.id}` : `/main/writer/post/${post?.id}`}
+              className={"absolute top-0 rounded-xl w-full h-full cursor-pointer"}
+            ></NavLink>
+          </div>
+        </div>
+      </div>
+    );
+  } else if (type === "default" || type === "writer-default") {
+    return (
+      <div className={"w-full bg-white rounded-xl relative"}>
+        <PostItemContent type={type} post={post} onUpdate={onUpdate} />
+      </div>
+    );
+  }
 };
 
 export default PostItem;
