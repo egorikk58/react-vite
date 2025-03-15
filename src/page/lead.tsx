@@ -15,11 +15,15 @@ const Main = () => {
 
     const handleAuthFlow = async () => {
         try {
-            if (!accessToken) throw new Error("Access token missing");
-            
+            if (!accessToken) {
+                throw new Error("Access token missing");
+            }
+
             if (isTokenExpired(accessToken)) {
-                if (!refreshToken) throw new Error("Refresh token missing");
-                
+                if (!refreshToken) {
+                    throw new Error("Refresh token missing");
+                }
+
                 refreshTokenRequest.current ||= api.auth.refreshToken(refreshToken)
                     .then(response => {
                         if (!response.data?.accessToken || !response.data?.refreshToken) {
@@ -32,12 +36,12 @@ const Main = () => {
                 localStorage.setItem("accessToken", response.data.accessToken);
                 localStorage.setItem("refreshToken", response.data.refreshToken);
             }
-            
+
             const tokenData = decodeAccessToken(localStorage.getItem("accessToken")!);
             navigate(tokenData["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] === "Author" 
                 ? "/main/writer" 
                 : "/main/reader");
-                
+
         } catch (error) {
             console.error("Auth error:", error);
             localStorage.clear();
@@ -58,7 +62,7 @@ const Main = () => {
 
     useEffect(() => {
         let isActive = true;
-        
+
         const initialize = async () => {
             await handleAuthFlow();
             if (isActive) await loadPosts();
