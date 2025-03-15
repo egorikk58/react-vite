@@ -7,7 +7,7 @@ import { Navigate } from "react-router";
 export default function App() {
     return (
         <div className={"w-full h-full bg-slate-50"}>
-            <Routes>
+            <Routes >
                 <Route path="/auth/*" element={<Auth/>}/>
                 <Route path="/main/*" element={<Lead/>}/>
                 <Route 
