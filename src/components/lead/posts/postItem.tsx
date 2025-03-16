@@ -117,15 +117,15 @@ const PostItemContent: FC<PostItemProps> = ({ type, post, onUpdate }) => {
         </div>
 
         <PostDialog
-          open={editPostDialog}
-          onOpenChange={() => setEditPostDialog(false)}
-          picState={editPostPic}
-          setPicState={setEditPostPic}
-          variation="edit"
-          postId={post?.id}
-          initialData={{ title: post?.title || "", content: post?.content || "" }}
-          onSuccess={onUpdate}
-        />
+        open={editPostDialog}
+        onOpenChange={() => setEditPostDialog(false)}
+        picState={false}
+        setPicState={() => {}}
+        variation="edit"
+        postId={post?.id}
+        initialData={{ title: post?.title || "", content: post?.content || "" }}
+        onSuccess={onUpdate} // Передаём onUpdate
+      />
       </div>
     </div>
   );

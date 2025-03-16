@@ -43,7 +43,7 @@ const PostDialog: FC<PostDialogProps> = ({
       setPicState(false);
     }
   }, [open]);
-
+  
   // Генерация превью изображения
   useEffect(() => {
     if (!selectedFile) {
@@ -73,48 +73,7 @@ const PostDialog: FC<PostDialogProps> = ({
   };
 
 
-  // const handleSubmit = async () => {
-  //   try {
-  //     setLoading(true);
 
-  //     if (!title || !content) {
-  //       alert('Заполните обязательные поля');
-  //       return;
-  //     }
-
-  //     let createdPostId: number | undefined;
-
-  //     // Создание нового поста
-  //     if (variation === "add") {
-  //       const { data: newPost } = await api.post.createPost({
-  //         title,
-  //         content,
-  //         idempotencyKey: Date.now().toString(),
-  //       });
-  //       createdPostId = newPost.id;
-  //     } 
-  //     // Редактирование существующего
-  //     else if (variation === "edit" && postId) {
-  //       await api.post.updatePost(postId, { title, content });
-  //       createdPostId = postId;
-  //     }
-
-  //     // Загрузка изображения если есть
-  //     if (createdPostId && selectedFile) {
-  //       const formData = new FormData();
-  //       formData.append('image', selectedFile);
-  //       // await api.post.uploadPostImage(createdPostId, formData);
-  //     }
-
-  //     onSuccess?.();
-  //     onOpenChange(false);
-  //   } catch (error) {
-  //     console.error('Ошибка создания поста:', error);
-  //     alert('Ошибка при создании поста');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
   const handleSubmit = async () => {
     try {
       setLoading(true);
@@ -141,16 +100,18 @@ const PostDialog: FC<PostDialogProps> = ({
         createdPostId = postId;
       }
   
-      // Загрузка изображения если есть
+      // Загрузка изображения, если есть
       if (createdPostId && selectedFile) {
         await api.post.uploadPostImage(createdPostId, selectedFile);
       }
   
+      // Вызываем onSuccess для обновления данных
       onSuccess?.();
-      onOpenChange(false);
+      onOpenChange(false); // Закрываем диалог
+      window.location.reload();
     } catch (error) {
-      console.error('Ошибка создания поста:', error);
-      alert('Ошибка при создании поста');
+      console.error('Ошибка создания/редактирования поста:', error);
+      alert('Ошибка при создании/редактировании поста');
     } finally {
       setLoading(false);
     }
