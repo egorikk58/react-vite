@@ -10,8 +10,11 @@ import SinglePost from "@/components/lead/posts/singlePost";
 const Posts = () => {
     const [createPostDialog, setCreatePostDialog] = useState(false);
     const [createPostPic, setCreatePostPic] = useState(false);
-    const { posts, loading, error } = usePosts();
+    const { posts, loading, error, refetch } = usePosts();
 
+    const handleUpdate = () => {
+      refetch(); // Перезапрашиваем данные
+    };
     if (loading) return <div>Загрузка...</div>;
     if (error) return <div>Ошибка: {error.message}</div>;
 
@@ -28,7 +31,7 @@ const Posts = () => {
                                     element={
                                         <div className={"flex flex-col gap-6"}>
                                             {posts.map((post) => (
-                                                <PostItem key={post.id} type="clickable" post={post} />
+                                                <PostItem key={post.id} type="clickable" post={post} onUpdate={handleUpdate} />
                                             ))}
                                         </div>
                                     }

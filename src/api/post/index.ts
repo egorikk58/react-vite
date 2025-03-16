@@ -49,3 +49,6 @@ export const deletePostImage = (
   imageId: number
 ): AxiosPromise<void> =>
   axiosClient.delete(apiRoutes.POST.IMAGE(postId, imageId));
+
+export const deletePost = (postId: number): AxiosPromise<void> =>
+  axiosClient.delete(apiRoutes.POST.DELETE(postId));

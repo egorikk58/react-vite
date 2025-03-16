@@ -1,5 +1,5 @@
 // api/routes.ts
-const API_BASE_URL = "https://cpt-stage-2.duckdns.org/api/";
+const API_BASE_URL = "https://cpt-stage-3-frontend.duckdns.org/api/";
 
 const apiRoutes = {
   AUTH: {

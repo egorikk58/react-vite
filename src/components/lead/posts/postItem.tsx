@@ -32,6 +32,22 @@ const PostItemContent: FC<PostItemProps> = ({ type, post, onUpdate }) => {
     }
   };
 
+  const handledeletePost = async () => {
+    if (post?.id)
+      try {
+        await api.post.deletePost(post.id);
+        
+      alert('Пост успешно удален');
+      window.location.reload(); // Перезагружаем страницу для обновления списка постов
+    } catch (error) {
+      console.error('Ошибка при удалении поста:', error);
+      alert('Не удалось удалить пост');
+    }
+    
+  };
+  
+  // Пример использования функции удаления поста
+
   return (
     <div>
       <div className={"flex flex-col gap-4 p-4"}>
@@ -81,17 +97,17 @@ const PostItemContent: FC<PostItemProps> = ({ type, post, onUpdate }) => {
         {(type === "writer-clickable" || type === "writer-default") && (
           <div className={"flex gap-3 w-[167px] h-10"}>
             <Button className={"w-[167px] h-10 z-10"} onClick={handlePublishPost}>
-              {post?.status === 'published' ? "Обновить пост" : "Опубликовать пост"}
+               Опубликовать пост
             </Button>
             <Button
               className={"w-[138px] h-10 z-10"}
               variant={"secondary"}
-              onClick={() => setEditPostDialog(true)}
+              onClick={() => setEditPostDialog(true) }
             >
               Редактировать
             </Button>
-            <Button variant="destructive" >
-              Удалить
+            <Button  className={"w-[138px] h-10 z-10"} variant={"destructive"} onClick={handledeletePost} >
+              Удалить 
             </Button>
           </div>
         )}
